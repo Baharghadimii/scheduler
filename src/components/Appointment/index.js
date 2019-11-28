@@ -26,7 +26,7 @@ export default function Appointment(props) {
           interviewer={props.interview.interviewer.name}
         />
       )}
-      {mode === CREATE && <Form />}
+      {mode === CREATE && <Form onCancel={back} />}
     </article>
   );
 }
