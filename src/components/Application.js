@@ -4,6 +4,7 @@ import "components/Application.scss";
 import DayList from "components/DayList";
 import Appointment from "components/Appointment";
 import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
+import { func } from "prop-types";
 
 export default function Application(props) {
   const [state, setState] = useState({
@@ -35,6 +36,20 @@ export default function Application(props) {
       })
 
   }
+  function cancelInterview(id) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    };
+    //updating the appointments object and adding the newly created appointment to the existing appointments object
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    //updating the state with the updated appointments objects
+    setState({ ...state, appointments });
+    console.log(state.appointments);
+  }
   useEffect(() => {
     Promise.all([
       Promise.resolve(axios.get("/api/days")),
@@ -62,6 +77,7 @@ export default function Application(props) {
         interview={interview}
         bookInterview={bookInterview}
         interviewers={interviewers}
+        cancelInterview={cancelInterview}
       />
     );
   });
