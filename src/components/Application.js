@@ -54,6 +54,7 @@ export default function Application(props) {
         }
       })
   }
+
   useEffect(() => {
     Promise.all([
       Promise.resolve(axios.get("/api/days")),
