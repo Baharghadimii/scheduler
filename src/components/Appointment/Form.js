@@ -6,7 +6,6 @@ import useVisualMode from "hooks/useVisualMode";
 export default function Form(props) {
   const [name, setName] = useState(props.name || "");
   const [interviewer, setInterviewer] = useState(props.interviewer || null);
-  const EMPTY = 'EMPTY';
 
   useVisualMode();
 
@@ -32,11 +31,7 @@ export default function Form(props) {
     <section className="appointment__card-right">
       <section className="appointment__actions">
         <Button danger onClick={props.onCancel}>Cancel</Button>
-        <Button confirm onClick={(event) => {
-          setName('');
-          setInterviewer(null);
-          props.onSave(name, interviewer);
-        }}>Save</Button>
+        <Button confirm onClick={props.onSave}>Save</Button>
       </section>
     </section>
   </main>

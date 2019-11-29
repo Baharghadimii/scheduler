@@ -18,13 +18,18 @@ export default function Application(props) {
   //save new appointment
   function bookInterview(id, interview) {
     console.log(id, interview);
-  }
-  function save(name, interviewer) {
-    const interview = {
-      student: name,
-      interviewer
+    //add the appointment object
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+    //add new appointment object to object of appointments
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
     };
   }
+
   useEffect(() => {
     //fetch data from the api
     Promise.all([
@@ -41,7 +46,7 @@ export default function Application(props) {
     //get interview object for each appointment
     const interview = getInterview(state, appointment.interview);
     return (
-      <Appointment
+      < Appointment
         key={appointment.id}
         id={appointment.id}
         time={appointment.time}
