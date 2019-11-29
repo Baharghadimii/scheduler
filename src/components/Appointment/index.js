@@ -32,12 +32,10 @@ export default function Appointment(props) {
   }
   function remove() {
     transition(DELETING)
-    props.cancelInterview(props.id);
-
-    setTimeout(() => {
-      transition(EMPTY)
-    }, 1000)
-
+    props.cancelInterview(props.id)
+      .then(() => {
+        transition(EMPTY);
+      });
   }
 
   return (
