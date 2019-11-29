@@ -1,65 +1,68 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "components/Application.scss";
 import DayList from "components/DayList";
 import Appointment from "components/Appointment";
-import { getAppointmentsForDay, getInterview } from "helpers/selectors";
-
-const axios = require('axios');
+import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
 
 export default function Application(props) {
-  //initial state object
   const [state, setState] = useState({
-    day: 'Monday',
+    day: "Monday",
     days: [],
     appointments: {},
     interviewers: {}
   });
   const setDay = day => setState({ ...state, day });
-  //save new appointment
+  const interviewers = getInterviewersForDay(state, state.day);
+
   function bookInterview(id, interview) {
-    console.log(id, interview);
-    //add the appointment object
+    // console.log(id, interview);
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview }
     };
-    //add new appointment object to object of appointments
+    //updating the appointments object and adding the newly created appointment to the existing appointments object
     const appointments = {
       ...state.appointments,
       [id]: appointment
     };
-    //update the state with new appointment
-    setState({ ...state, appointments })
+    //updating the state with the updated appointments objects
+    setState({ ...state, appointments });
   }
-
   useEffect(() => {
-    //fetch data from the api
     Promise.all([
-      Promise.resolve(axios.get('/api/days')),
-      Promise.resolve(axios.get('/api/appointments')),
-      Promise.resolve(axios.get('/api/interviewers')),
-    ]).then((all) => {
-      //update state object with data from api
-      setState(prev => ({ ...state, days: all[0].data, appointments: all[1].data, interviewers: all[2].data }))
+      Promise.resolve(axios.get("/api/days")),
+      Promise.resolve(axios.get("/api/appointments")),
+      Promise.resolve(axios.get("/api/interviewers"))
+    ]).then(all => {
+      setState(prev => ({
+        ...state,
+        days: all[0].data,
+        appointments: all[1].data,
+        interviewers: all[2].data
+      }));
     });
   }, []);
-  //get booked appointments for the selected day
-  const app = getAppointmentsForDay(state, state.day).map(appointment => {
-    //get interview object for each appointment
+  
+  const appointments = getAppointmentsForDay(state, state.day);
+  const schedule = appointments.map(appointment => {
     const interview = getInterview(state, appointment.interview);
+    // console.log(interview);
     return (
-      < Appointment
+      <Appointment
         key={appointment.id}
         id={appointment.id}
         time={appointment.time}
         interview={interview}
         bookInterview={bookInterview}
+        interviewers={interviewers}
       />
     );
   });
   return (
     <main className="layout">
       <section className="sidebar">
+        {/* Replace this with the sidebar elements during the "Environment Setup" activity. */}
         <img
           className="sidebar--centered"
           src="images/logo.png"
@@ -70,8 +73,7 @@ export default function Application(props) {
           <DayList
             days={state.days}
             day={state.day}
-            setDay={setDay}
-          />
+            setDay={setDay} />
         </nav>
         <img
           className="sidebar__lhl sidebar--centered"
@@ -80,7 +82,8 @@ export default function Application(props) {
         />
       </section>
       <section className="schedule">
-        {app}
+        {schedule}
+        <Appointment bookInterview={bookInterview} key="last" time="5pm" />
       </section>
     </main>
   );
