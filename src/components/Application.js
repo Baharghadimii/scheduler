@@ -7,25 +7,38 @@ import { getAppointmentsForDay, getInterview } from "helpers/selectors";
 const axios = require('axios');
 
 export default function Application(props) {
+  //initial state object
   const [state, setState] = useState({
     day: 'Monday',
     days: [],
     appointments: {},
     interviewers: {}
   });
-
   const setDay = day => setState({ ...state, day });
-
+  //save new appointment
+  function bookInterview(id, interview) {
+    console.log(id, interview);
+  }
+  function save(name, interviewer) {
+    const interview = {
+      student: name,
+      interviewer
+    };
+  }
   useEffect(() => {
+    //fetch data from the api
     Promise.all([
       Promise.resolve(axios.get('/api/days')),
       Promise.resolve(axios.get('/api/appointments')),
       Promise.resolve(axios.get('/api/interviewers')),
     ]).then((all) => {
+      //update state object with data from api
       setState(prev => ({ ...state, days: all[0].data, appointments: all[1].data, interviewers: all[2].data }))
     });
   }, []);
+  //get booked appointments for the selected day
   const app = getAppointmentsForDay(state, state.day).map(appointment => {
+    //get interview object for each appointment
     const interview = getInterview(state, appointment.interview);
     return (
       <Appointment
@@ -33,6 +46,7 @@ export default function Application(props) {
         id={appointment.id}
         time={appointment.time}
         interview={interview}
+        bookInterview={bookInterview}
       />
     );
   });
