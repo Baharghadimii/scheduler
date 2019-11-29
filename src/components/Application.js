@@ -28,6 +28,8 @@ export default function Application(props) {
       ...state.appointments,
       [id]: appointment
     };
+    //update the state with new appointment
+    setState({ ...state, appointments })
   }
 
   useEffect(() => {
