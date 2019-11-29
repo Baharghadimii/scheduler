@@ -16,18 +16,24 @@ export default function Application(props) {
   const interviewers = getInterviewersForDay(state, state.day);
 
   function bookInterview(id, interview) {
-    // console.log(id, interview);
-    const appointment = {
-      ...state.appointments[id],
-      interview: { ...interview }
-    };
-    //updating the appointments object and adding the newly created appointment to the existing appointments object
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
-    //updating the state with the updated appointments objects
-    setState({ ...state, appointments });
+
+    return axios.put(`/api/appointments/${id}`, { interview })
+      .then((response) => {
+        if (response) {
+          const appointment = {
+            ...state.appointments[id],
+            interview: { ...interview }
+          };
+          //updating the appointments object and adding the newly created appointment to the existing appointments object
+          const appointments = {
+            ...state.appointments,
+            [id]: appointment
+          };
+          //updating the state with the updated appointments objects
+          setState({ ...state, appointments });
+        }
+      })
+
   }
   useEffect(() => {
     Promise.all([
@@ -43,7 +49,7 @@ export default function Application(props) {
       }));
     });
   }, []);
-  
+
   const appointments = getAppointmentsForDay(state, state.day);
   const schedule = appointments.map(appointment => {
     const interview = getInterview(state, appointment.interview);
