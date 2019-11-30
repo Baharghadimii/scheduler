@@ -15,6 +15,9 @@ export default function Appointment(props) {
   const DELETING = "DELETING";
   const CONFIRM = "CONFIRM";
   const EDIT = "EDIT";
+  const ERROR_SAVE = "ERROR_SAVE";
+  const ERROR_DELETE = "ERROR_DELETE";
+
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   )
@@ -28,11 +31,14 @@ export default function Appointment(props) {
       .then(() => {
         transition(SHOW)
       })
+      .catch(() => transition(ERROR_SAVE))
   }
   function remove() {
     transition(DELETING)
     props.cancelInterview(props.id)
       .then(() => transition(EMPTY))
+      .catch(() => transition(ERROR_DELETE)
+      );
   }
   return (
     <article className="appointment">
