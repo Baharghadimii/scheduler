@@ -1,34 +1,37 @@
-export function getAppointmentsForDay(state, d) {
+// import { statements } from "@babel/template";
+export function getAppointmentsForDay(state, day) {
   let result = [];
-  const days = state.days.filter(day => day.name === d);
-  if (days[0]) {
-    days[0].appointments.forEach(element => {
-      if (state.appointments[element]) {
-        result.push(state.appointments[element]);
+  const filteredDay = state.days.filter(d => d.name === day);
+  if (filteredDay.length) {
+    const dayAppointments = filteredDay[0].appointments;
+    dayAppointments.forEach(app => {
+      if (app === state.appointments[app].id) {
+        result.push(state.appointments[app]);
       }
     });
   }
-
   return result;
 }
 export function getInterview(state, interview) {
-  let result = null;
+  let interviewInfo = null;
   if (interview) {
-    result = { ...interview, interviewer: state.interviewers[interview.interviewer] };
+    interviewInfo = {
+      ...interview,
+      interviewer: state.interviewers[interview.interviewer]
+    };
   }
-  return result;
+  return interviewInfo;
 }
-export function getInterviewersForDay(state, d) {
+export function getInterviewersForDay(state, day) {
   let result = [];
-  const days = state.days.filter(day => day.name === d);
-  if (days.length) {
-    days[0].interviewers.forEach(element => {
-      if (state.interviewers[element]) {
-        result.push(state.interviewers[element]);
+  const filteredDay = state.days.filter(d => d.name === day);
+  if (filteredDay.length) {
+    const dayInterviewers = filteredDay[0].interviewers;
+    dayInterviewers.forEach(app => {
+      if (app === state.interviewers[app].id) {
+        result.push(state.interviewers[app]);
       }
     });
   }
   return result;
 }
-
-

@@ -42,6 +42,6 @@ export default function Form(props) {
           </Button>
         </section>
       </section>
-    </main>
+    </main >
   );
 }
