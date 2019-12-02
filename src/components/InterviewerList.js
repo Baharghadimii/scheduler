@@ -1,7 +1,9 @@
 import React from "react";
 import InterviewerListItem from "./InterviewerListItem";
 import "components/InterviewerList.scss";
+
 export default function InterviewerList(props) {
+  //map through interviewers property of form component and render the interviewers
   const interviewersList = props.interviewers.map(interviewer => {
     return (
       <InterviewerListItem
