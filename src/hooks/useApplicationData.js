@@ -1,5 +1,6 @@
 import { useReducer, useEffect } from 'react';
 import axios from "axios";
+import { getAppointmentsForDay } from '../helpers/selectors'
 const SET_DAY = "SET_DAY";
 const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
 const SET_INTERVIEW = "SET_INTERVIEW";
@@ -20,7 +21,29 @@ function reducer(state, action) {
         ...state.appointments,
         [action.id]: appointment
       };
-      return { ...state, appointments }
+
+      const getSpotsForDay = day =>
+        day.appointments.length -
+        day.appointments.reduce(
+          (count, id) => (appointments[id].interview ? count + 1 : count),
+          0
+        );
+
+      const days = state.days.map(day => {
+        return day.appointments.includes(action.id)
+          ? {
+            ...day,
+            spots: getSpotsForDay(day)
+          }
+          : day;
+      });
+
+      return {
+        ...state,
+        appointments,
+        days
+      };
+
     default:
       throw new Error(
         `Tried to reduce with unsupported action type: ${action.type}`
@@ -38,6 +61,7 @@ export default function useApplicationData() {
 
   const setDay = day => dispatch({ type: SET_DAY, day });
 
+
   //setting initial data using api call
   useEffect(() => {
     Promise.all([
@@ -51,13 +75,27 @@ export default function useApplicationData() {
       dispatch({ type: SET_APPLICATION_DATA, days, appointments, interviewers });
     });
   }, []);
+  const spots = getAppointmentsForDay(state, state.day);
+  let counter = 0;
+  for (const s in spots) {
+    if (!spots[s].interview) {
+      counter++;
+    }
+  }
+  useEffect(() => {
+    for (const day in state.days) {
+      console.log(state.days[day].spots);
+    }
+  }, [state])
+
+
 
   //setting interview with appointment id and interview object
   function bookInterview(id, interview) {
     return axios.put(`/api/appointments/${id}`, { interview })
       .then((response) => {
         if (response) {
-          dispatch({ type: SET_INTERVIEW, id, interview })
+          dispatch({ type: SET_INTERVIEW, id, interview });
         }
       });
   }
