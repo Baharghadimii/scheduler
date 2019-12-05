@@ -4,6 +4,10 @@ Interview Scheduler is a single page application (SPA) and is built using React.
 
 ## Final Product
 
+!["Booked Appointments"](https://github.com/Baharghadimii/scheduler/blob/master/doc/Booked-Interviews.png?raw=true)
+!["Appointment Form"](https://github.com/Baharghadimii/scheduler/blob/master/doc/Booking-Form.png?raw=true)
+!["Saving Process"](https://github.com/Baharghadimii/scheduler/blob/master/doc/Saving-Process.png?raw=true)
+
 ## Dependencies
 
 - Axios
