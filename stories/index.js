@@ -13,7 +13,6 @@ import InterviewerListItem from "components/InterviewerListItem";
 import Appointment from "components/Appointment/index";
 import Header from "components/Appointment/Header";
 import Empty from "components/Appointment/Empty";
-import { act } from "@testing-library/react";
 import Show from 'components/Appointment/Show';
 import Confirm from "components/Appointment/Confirm";
 import Status from "components/Appointment/Status";

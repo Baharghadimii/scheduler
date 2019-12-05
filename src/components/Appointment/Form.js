@@ -7,6 +7,7 @@ export default function Form(props) {
   const [name, setName] = useState(props.name || "");
   const [interviewer, setInterviewer] = useState(props.interviewer || null);
   const [error, setError] = useState("");
+  // resets name and interviewer after cancellation
   function reset() {
     setName("");
     setError("");
@@ -26,7 +27,7 @@ export default function Form(props) {
     setError("");
     props.onSave(name, interviewer);
   }
-
+  //cancels the interview
   function cancel() {
     reset();
     props.onCancel();

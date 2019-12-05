@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 export default function useVisualMode(initial) {
   const [history, setHistory] = useState([initial]);
   const [mode, setMode] = useState(initial);
@@ -11,12 +11,13 @@ export default function useVisualMode(initial) {
       setHistory([...history.slice(0, history.length - 1), mode]);
     } else {
       //add the current mode to the history array
-      //set the history
       history.push(mode)
+      //set the history
       setHistory(history);
     }
   }
   function back() {
+    //check if there's more that one item in history array
     if (history.length > 1) {
       history.pop();
       setMode(history[history.length - 1]);
