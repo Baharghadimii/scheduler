@@ -110,7 +110,7 @@ describe(("Application"), () => {
     fireEvent.click(getByText(appointment, "Save"));
 
     await waitForElement(() =>
-      getByText(appointment, "Unable to save the appointment!")
+      getByText(appointment, "You must choose one interviewer!")
     );
   });
 

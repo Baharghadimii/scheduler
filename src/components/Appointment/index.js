@@ -19,11 +19,18 @@ export default function Appointment(props) {
   const EDIT = "EDIT";
   const ERROR_SAVE = "ERROR_SAVE";
   const ERROR_DELETE = "ERROR_DELETE";
+  const ERROR_SAVE_WITH_NO_INTERVIEWER = "ERROR_SAVE_WITH_NO_INTERVIEWER";
 
+  const { interview } = props;
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   )
   function save(name, interviewer) {
+
+    if (!interviewer) {
+      transition(ERROR_SAVE_WITH_NO_INTERVIEWER, true);
+      return;
+    }
     const interview = {
       student: name,
       interviewer
@@ -33,7 +40,7 @@ export default function Appointment(props) {
       .then(() => {
         transition(SHOW)
       })
-      .catch(() => transition(ERROR_SAVE, true))
+      .catch(() => transition(ERROR_SAVE))
   }
   function remove() {
     transition(DELETING, true)
@@ -46,12 +53,12 @@ export default function Appointment(props) {
     <article className="appointment" data-testid="appointment">
       <Header time={props.time} />
       {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
-      {mode === SHOW && (
+      {mode === SHOW && interview && (
         <Show
-          student={props.interview.student}
-          interviewer={props.interview.interviewer.name}
-          onEdit={() => transition(EDIT)}
+          student={interview.student}
+          interviewer={interview.interviewer}
           onDelete={() => transition(CONFIRM)}
+          onEdit={() => transition(EDIT)}
         />
       )}
       {mode === CREATE &&
@@ -67,11 +74,19 @@ export default function Appointment(props) {
         <Confirm onConfirm={remove} onCancel={() => transition(SHOW)} />
       }
       {mode === EDIT &&
-        <Form onCancel={back} onSave={save} name={props.interview.student} interviewers={props.interviewers} interviewer={props.interview.interviewer.id}
+        <Form
+          name={interview.student}
+          interviewer={interview.interviewer.id}
+          interviewers={props.interviewers}
+          onCancel={back}
+          onSave={save}
         />
       }
       {mode === ERROR_SAVE &&
         <Error message="Unable to save the appointment!" onClose={() => transition(SHOW)} />
+      }
+      {mode === ERROR_SAVE_WITH_NO_INTERVIEWER &&
+        <Error message="You must choose one interviewer!" onClose={() => transition(CREATE, true)} />
       }
       {mode === ERROR_DELETE &&
         <Error message="Unable to delete the appointment!" onClose={() => transition(SHOW)} />

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import InterviewerList from "components/InterviewerList";
 import Button from "components/Button";
-import PropTypes from 'prop-types';
 
 export default function Form(props) {
   const [name, setName] = useState(props.name || "");
@@ -13,11 +12,6 @@ export default function Form(props) {
     setError("");
     setInterviewer(null);
   }
-  //validate two props: selected should be number and setInterviewer should be required function
-  InterviewerList.propTypes = {
-    value: PropTypes.number,
-    onChange: PropTypes.func.isRequired
-  };
   //validate if user types the name then save the appointment
   function validate() {
     if (name === "") {

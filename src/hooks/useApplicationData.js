@@ -36,10 +36,8 @@ export default function useApplicationData() {
   //setting interview with appointment id and interview object
   function bookInterview(id, interview) {
     return axios.put(`/api/appointments/${id}`, { interview })
-      .then((response) => {
-        if (response) {
-          dispatch({ type: SET_INTERVIEW, id, interview });
-        }
+      .then(() => {
+        dispatch({ type: SET_INTERVIEW, id, interview });
       });
   }
   //cancelling interview  with appointment id 
